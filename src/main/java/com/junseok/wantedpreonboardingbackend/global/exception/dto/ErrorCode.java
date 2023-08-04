@@ -25,6 +25,10 @@ public enum ErrorCode {
     REQUEST_FAILED(10006, "Request failed"),
     RESPONSE_STATUS_CODE_IS_NOT_200(10007, "Response status code is not 200"),
     CONTENT_TYPE_NOT_ALLOWED(10008, "Content-type not allowed"),
+
+    // 검증 : 20,000
+    INVALID_SIGNUP_FORMAT(20000, "Invalid sign up format, check email, password format."),
+    INVALID_ALGORITHM(20001, "Invalid algorithm. See the \"Java Security Standard Algorithm Names Specification\""),
     ;
     //-----------------------------------------------------------------------------------------------------------
 

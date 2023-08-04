@@ -1,12 +1,20 @@
 package com.junseok.wantedpreonboardingbackend.module.user.domain;
 
+import com.junseok.wantedpreonboardingbackend.global.exception.CustomException;
+import com.junseok.wantedpreonboardingbackend.global.exception.dto.ErrorCode;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Objects;
+
+import static com.junseok.wantedpreonboardingbackend.global.util.ByteUtils.bytesToHex;
 
 @Entity
 @Table(name = "users")
@@ -25,11 +33,36 @@ public class User {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "salt")
+    private String salt;
+
     @Builder
     private User(Long id, String email, String password) {
+        if (!this.validationSignUpFormat(email, password)) {
+            throw new CustomException(ErrorCode.INVALID_SIGNUP_FORMAT);
+        }
         this.id = id;
         this.email = email;
-        this.password = password;
+        this.salt = this.generateSalt();
+        this.password = this.hashPassword(password, this.salt); // password 암호화
+    }
+
+    public String hashPassword(String original, String salt) {
+        String temp = original + salt;
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(temp.getBytes(StandardCharsets.UTF_8));
+            return bytesToHex(hash);
+        } catch (NoSuchAlgorithmException exception) {
+            throw new CustomException(ErrorCode.INVALID_ALGORITHM);
+        }
+    }
+
+    private String generateSalt() {
+        SecureRandom random = new SecureRandom();
+        byte[] saltBytes = new byte[16];
+        random.nextBytes(saltBytes);
+        return bytesToHex(saltBytes);
     }
 
     /**
@@ -61,6 +94,7 @@ public class User {
                 "id=" + id +
                 ", email='" + email + '\'' +
                 ", password='" + "[PROTECTED]" + '\'' +
+                ", salt='" + "[PROTECTED]" + '\'' +
                 '}';
     }
 }
