@@ -47,6 +47,12 @@ public class User {
         this.password = this.hashPassword(password, this.salt); // password 암호화
     }
 
+    /**
+     * hashing user password using SHA-256 hash algorithm
+     * @param original unencrypted password
+     * @param salt     salt that adding to original
+     * @return encrypted password
+     */
     public String hashPassword(String original, String salt) {
         String temp = original + salt;
         try {
