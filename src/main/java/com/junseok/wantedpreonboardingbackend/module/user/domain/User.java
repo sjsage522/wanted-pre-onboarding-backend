@@ -1,4 +1,4 @@
-package com.junseok.module.user.domain;
+package com.junseok.wantedpreonboardingbackend.module.user.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;

@@ -1,4 +1,4 @@
-package com.junseok.global.model;
+package com.junseok.wantedpreonboardingbackend.global.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

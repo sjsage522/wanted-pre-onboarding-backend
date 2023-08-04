@@ -1,7 +1,7 @@
-package com.junseok.module.post.domain;
+package com.junseok.wantedpreonboardingbackend.module.post.domain;
 
-import com.junseok.global.model.BaseTimeEntity;
-import com.junseok.module.user.domain.User;
+import com.junseok.wantedpreonboardingbackend.global.model.BaseTimeEntity;
+import com.junseok.wantedpreonboardingbackend.module.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

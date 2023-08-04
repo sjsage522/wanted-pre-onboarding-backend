@@ -1,8 +1,8 @@
-package com.junseok.global.exception.handler;
+package com.junseok.wantedpreonboardingbackend.global.exception.handler;
 
-import com.junseok.global.exception.CustomException;
-import com.junseok.global.exception.dto.ErrorCode;
-import com.junseok.global.exception.dto.ErrorResponse;
+import com.junseok.wantedpreonboardingbackend.global.exception.CustomException;
+import com.junseok.wantedpreonboardingbackend.global.exception.dto.ErrorCode;
+import com.junseok.wantedpreonboardingbackend.global.exception.dto.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;

@@ -1,6 +1,6 @@
-package com.junseok.global.exception;
+package com.junseok.wantedpreonboardingbackend.global.exception;
 
-import com.junseok.global.exception.dto.ErrorCode;
+import com.junseok.wantedpreonboardingbackend.global.exception.dto.ErrorCode;
 import org.springframework.http.HttpStatus;
 
 /**

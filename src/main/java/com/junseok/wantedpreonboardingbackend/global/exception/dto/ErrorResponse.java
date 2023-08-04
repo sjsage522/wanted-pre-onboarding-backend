@@ -1,4 +1,4 @@
-package com.junseok.global.exception.dto;
+package com.junseok.wantedpreonboardingbackend.global.exception.dto;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
