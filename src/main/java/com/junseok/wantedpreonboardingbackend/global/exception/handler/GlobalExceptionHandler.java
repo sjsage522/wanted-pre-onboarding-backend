@@ -1,5 +1,6 @@
 package com.junseok.wantedpreonboardingbackend.global.exception.handler;
 
+import com.junseok.wantedpreonboardingbackend.global.dto.ApiResult;
 import com.junseok.wantedpreonboardingbackend.global.exception.CustomException;
 import com.junseok.wantedpreonboardingbackend.global.exception.dto.ErrorCode;
 import com.junseok.wantedpreonboardingbackend.global.exception.dto.ErrorResponse;
@@ -11,41 +12,43 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import static com.junseok.wantedpreonboardingbackend.global.dto.ApiResult.failed;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
-    protected ResponseEntity<ErrorResponse> handleCustomException(CustomException e) {
+    protected ResponseEntity<ApiResult<ErrorResponse>> handleCustomException(CustomException e) {
         ErrorCode errorCode = e.getErrorCode();
         String message = e.getMessage();
         HttpStatus status = e.getStatus();
         ErrorResponse errorResponse = new ErrorResponse(errorCode.getCode(), message);
-        return new ResponseEntity<>(errorResponse, status);
+        return new ResponseEntity<>(failed(errorResponse), status);
     }
 
     // 지원하지 않는 method 405 error
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    protected ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
+    protected ResponseEntity<ApiResult<ErrorResponse>> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
         ErrorResponse errorResponse = new ErrorResponse(ErrorCode.METHOD_NOT_ALLOWED);
-        return new ResponseEntity<>(errorResponse, HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity<>(failed(errorResponse), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     // @RequestBody validation error
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+    public ResponseEntity<ApiResult<ErrorResponse>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         String message = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
         ErrorResponse errorResponse = getErrorResponseByMessage(message);
 
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(failed(errorResponse), HttpStatus.BAD_REQUEST);
     }
 
     // @ModelAttribute validation error
     @ExceptionHandler(BindException.class)
-    public ResponseEntity<ErrorResponse> handleBindException(BindException e) {
+    public ResponseEntity<ApiResult<ErrorResponse>> handleBindException(BindException e) {
         String message = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
         ErrorResponse errorResponse = getErrorResponseByMessage(message);
 
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(failed(errorResponse), HttpStatus.BAD_REQUEST);
     }
 
     private ErrorResponse getErrorResponseByMessage(String message) {

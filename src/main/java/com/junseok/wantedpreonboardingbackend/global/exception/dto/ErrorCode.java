@@ -29,6 +29,9 @@ public enum ErrorCode {
     // 검증 : 20,000
     INVALID_SIGNUP_FORMAT(20000, "Invalid sign up format, check email, password format."),
     INVALID_ALGORITHM(20001, "Invalid algorithm. See the \"Java Security Standard Algorithm Names Specification\""),
+
+    // 비즈니스 로직 : 30,000
+    NOT_FOUND_USER(30000, "Not found user."),
     ;
     //-----------------------------------------------------------------------------------------------------------
 
