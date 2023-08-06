@@ -4,3 +4,4 @@ spring:
 
   config:
     import:
+      - classpath:application-jwt.yml

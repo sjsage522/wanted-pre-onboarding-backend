@@ -1,8 +1,5 @@
 package com.junseok.wantedpreonboardingbackend.global.util;
 
-import org.springframework.stereotype.Component;
-
-@Component
 public class ByteUtils {
 
     public static String bytesToHex(byte[] bytes) {

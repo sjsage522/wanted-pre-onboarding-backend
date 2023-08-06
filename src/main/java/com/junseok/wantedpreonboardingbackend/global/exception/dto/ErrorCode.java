@@ -32,6 +32,9 @@ public enum ErrorCode {
 
     // 비즈니스 로직 : 30,000
     NOT_FOUND_USER(30000, "Not found user."),
+
+    // 인증 : 40,000
+    UNAUTHORIZED_USER(40000, "Mismatch user password.");
     ;
     //-----------------------------------------------------------------------------------------------------------
 

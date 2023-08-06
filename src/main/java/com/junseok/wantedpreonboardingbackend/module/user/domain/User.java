@@ -1,5 +1,6 @@
 package com.junseok.wantedpreonboardingbackend.module.user.domain;
 
+import com.junseok.wantedpreonboardingbackend.global.exception.AuthenticationException;
 import com.junseok.wantedpreonboardingbackend.global.exception.CustomException;
 import com.junseok.wantedpreonboardingbackend.global.exception.dto.ErrorCode;
 import jakarta.persistence.*;
@@ -38,9 +39,7 @@ public class User {
 
     @Builder
     private User(Long id, String email, String password) {
-        if (!this.validationSignUpFormat(email, password)) {
-            throw new CustomException(ErrorCode.INVALID_SIGNUP_FORMAT);
-        }
+        validationSignUpFormat(email, password);
         this.id = id;
         this.email = email;
         this.salt = this.generateSalt();
@@ -64,6 +63,12 @@ public class User {
         }
     }
 
+    public void validationMatchPassword(String target) {
+        if (!this.password.equals(target)) {
+            throw new AuthenticationException(ErrorCode.UNAUTHORIZED_USER);
+        }
+    }
+
     private String generateSalt() {
         SecureRandom random = new SecureRandom();
         byte[] saltBytes = new byte[16];
@@ -75,10 +80,11 @@ public class User {
      * Validation when signing up
      * @param email    user email
      * @param password user original password
-     * @return boolean true if valid otherwise false
      */
-    public boolean validationSignUpFormat(String email, String password) {
-        return email.contains("@") && password.length() >= 8;
+    public static void validationSignUpFormat(String email, String password) {
+        if (!email.contains("@") || password.length() < 8) {
+            throw new CustomException(ErrorCode.INVALID_SIGNUP_FORMAT);
+        }
     }
 
     @Override
