@@ -21,7 +21,7 @@ public class PostController {
     /**
      * 게시글 생성
      */
-    @PostMapping("/post")
+    @PostMapping("/posts")
     public ResponseEntity<ApiResult<Long>> createPost(@RequestBody PostCreateDto postCreateDto) {
         final Long postId = postService.createPost(postCreateDto.getTitle(), postCreateDto.getContent(), 1L);// TODO userId
 
