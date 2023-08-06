@@ -18,8 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 
-import static com.junseok.wantedpreonboardingbackend.module.post.TestUtils.makeUser;
-import static com.junseok.wantedpreonboardingbackend.module.post.TestUtils.toJson;
+import static com.junseok.wantedpreonboardingbackend.TestUtils.makeUser;
+import static com.junseok.wantedpreonboardingbackend.TestUtils.toJson;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -62,7 +62,7 @@ class PostControllerTest {
 
         // when
         ResultActions result = mockMvc.perform(
-                post("/api/v1/post")
+                post("/api/v1/posts")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 toJson(

@@ -1,4 +1,4 @@
-package com.junseok.wantedpreonboardingbackend.module.post;
+package com.junseok.wantedpreonboardingbackend;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
