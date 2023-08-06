@@ -4,18 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum ErrorCode {
-
-    /**
-     * ---- 서버 에러 분류 (10,000 ~ ) ----
-     * common        : 10,000
-     * 인증           : 20,000
-     *
-     * ---- 서비스 단위 분류 (20,000 ~ ) ----
-     *
-     */
-
-    //-----------------------------------------서버 에러 분류 (10,000 ~ )-----------------------------------------
-    // common : 10,000
+    // 공통 : 10,000
     INVALID_INPUT_VALUE(10000, "Invalid input value"),
     UNAUTHORIZED(10001, "Unauthorized access"),
     METHOD_NOT_ALLOWED(10002, "Method not allowed"),
