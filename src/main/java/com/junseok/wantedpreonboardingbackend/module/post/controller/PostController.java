@@ -1,6 +1,7 @@
 package com.junseok.wantedpreonboardingbackend.module.post.controller;
 
 import com.junseok.wantedpreonboardingbackend.global.dto.ApiResult;
+import com.junseok.wantedpreonboardingbackend.global.util.HttpServletUtils;
 import com.junseok.wantedpreonboardingbackend.module.post.dto.PostCreateDto;
 import com.junseok.wantedpreonboardingbackend.module.post.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -18,12 +19,15 @@ public class PostController {
 
     private final PostService postService;
 
+    private final HttpServletUtils httpServletUtils;
+
     /**
      * 게시글 생성
      */
     @PostMapping("/posts")
     public ResponseEntity<ApiResult<Long>> createPost(@RequestBody PostCreateDto postCreateDto) {
-        final Long postId = postService.createPost(postCreateDto.getTitle(), postCreateDto.getContent(), 1L);// TODO userId
+        Long userId = httpServletUtils.getUserIdFromServletRequest();
+        final Long postId = postService.createPost(postCreateDto.getTitle(), postCreateDto.getContent(), userId);
 
         return new ResponseEntity<>(
             ApiResult.succeed(postId),
