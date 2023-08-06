@@ -1,6 +1,8 @@
 package com.junseok.wantedpreonboardingbackend.module.user.controller;
 
 import com.junseok.wantedpreonboardingbackend.global.exception.handler.GlobalExceptionHandler;
+import com.junseok.wantedpreonboardingbackend.module.user.dao.UserRepository;
+import com.junseok.wantedpreonboardingbackend.module.user.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 
+import static com.junseok.wantedpreonboardingbackend.TestUtils.makeUser;
 import static com.junseok.wantedpreonboardingbackend.TestUtils.toJson;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,6 +33,9 @@ class UserControllerTest {
 
     @Autowired
     private UserController userController;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @BeforeEach
     void init() {
@@ -60,6 +66,7 @@ class UserControllerTest {
                         )
         );
 
+        // then
         result.andDo(print())
                 .andExpect(status().isCreated());
     }
@@ -86,6 +93,7 @@ class UserControllerTest {
                         )
         );
 
+        // then
         result.andDo(print())
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.error.code", is(20000)))
@@ -114,9 +122,167 @@ class UserControllerTest {
                         )
         );
 
+        // then
         result.andDo(print())
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.error.code", is(20000)))
                 .andExpect(jsonPath("$.error.message", is("Invalid sign up format, check email, password format.")));
+    }
+
+    @DisplayName("사용자 로그인 성공 테스트")
+    @Test
+    void authUser() throws Exception {
+        // given
+        String email = "test@gmail.com";
+        String password = "12345678";
+        User user = makeUser(email, password);
+        userRepository.save(user);
+
+        // when
+        ResultActions result = mockMvc.perform(
+                post("/api/v1/users/auth")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(
+                                toJson(
+                                        new HashMap<>() {
+                                            {
+                                                put("email", email);
+                                                put("password",password);
+                                            }
+                                        }
+                                )
+                        )
+        );
+        userRepository.deleteAll();
+
+        // then
+        result.andDo(print())
+                .andExpect(status().isCreated());
+    }
+
+    @DisplayName("사용자 로그인 실패 테스트 - 이메일에 @ 누락")
+    @Test
+    void authUserFail1() throws Exception {
+        // given
+        String email = "test!gmail.com";
+        String password = "12345678";
+
+        // when
+        ResultActions result = mockMvc.perform(
+                post("/api/v1/users/auth")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(
+                                toJson(
+                                        new HashMap<>() {
+                                            {
+                                                put("email", email);
+                                                put("password",password);
+                                            }
+                                        }
+                                )
+                        )
+        );
+
+        // then
+        result.andDo(print())
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.error.code", is(20000)))
+                .andExpect(jsonPath("$.error.message", is("Invalid sign up format, check email, password format.")));
+    }
+
+    @DisplayName("사용자 로그인 실패 테스트 - 패스워드 8자 미만")
+    @Test
+    void authUserFail2() throws Exception {
+        // given
+        String email = "test@gmail.com";
+        String password = "1234567";
+
+        // when
+        ResultActions result = mockMvc.perform(
+                post("/api/v1/users/auth")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(
+                                toJson(
+                                        new HashMap<>() {
+                                            {
+                                                put("email", email);
+                                                put("password",password);
+                                            }
+                                        }
+                                )
+                        )
+        );
+
+        // then
+        result.andDo(print())
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.error.code", is(20000)))
+                .andExpect(jsonPath("$.error.message", is("Invalid sign up format, check email, password format.")));
+    }
+
+    @DisplayName("사용자 로그인 실패 테스트 - 비밀번호 불일치")
+    @Test
+    void authUserFail3() throws Exception {
+        // given
+        String email = "test@gmail.com";
+        String password = "12345678";
+        User user = makeUser(email, password);
+        userRepository.save(user);
+
+        // when
+        ResultActions result = mockMvc.perform(
+                post("/api/v1/users/auth")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(
+                                toJson(
+                                        new HashMap<>() {
+                                            {
+                                                put("email", email);
+                                                put("password","12345678!!");
+                                            }
+                                        }
+                                )
+                        )
+        );
+        userRepository.deleteAll();
+
+        // then
+        result.andDo(print())
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.error.code", is(40000)))
+                .andExpect(jsonPath("$.error.message", is("Mismatch user password.")));
+    }
+
+    @DisplayName("사용자 로그인 실패 테스트 - 존재하지 않는 이메일")
+    @Test
+    void authUserFail4() throws Exception {
+        // given
+        String email = "test@gmail.com";
+        String password = "12345678";
+        User user = makeUser(email, password);
+        userRepository.save(user);
+
+        // when
+        ResultActions result = mockMvc.perform(
+                post("/api/v1/users/auth")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(
+                                toJson(
+                                        new HashMap<>() {
+                                            {
+                                                put("email", "not@gmail.com");
+                                                put("password",password);
+                                            }
+                                        }
+                                )
+                        )
+        );
+        userRepository.deleteAll();
+
+        // then
+        result.andDo(print())
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.error.code", is(30000)))
+                .andExpect(jsonPath("$.error.message", is("Not found user.")));
     }
 }
