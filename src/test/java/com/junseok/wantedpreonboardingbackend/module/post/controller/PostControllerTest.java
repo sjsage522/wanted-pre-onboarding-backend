@@ -1,6 +1,10 @@
 package com.junseok.wantedpreonboardingbackend.module.post.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.junseok.wantedpreonboardingbackend.global.exception.handler.ExceptionHandlerFilter;
 import com.junseok.wantedpreonboardingbackend.global.exception.handler.GlobalExceptionHandler;
+import com.junseok.wantedpreonboardingbackend.global.filter.AuthFilter;
+import com.junseok.wantedpreonboardingbackend.global.util.JwtProvider;
 import com.junseok.wantedpreonboardingbackend.module.user.dao.UserRepository;
 import com.junseok.wantedpreonboardingbackend.module.user.domain.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,17 +40,24 @@ class PostControllerTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private JwtProvider jwtProvider;
+
+    private String jwt;
+
     @BeforeEach
     void init() {
         mockMvc = MockMvcBuilders.standaloneSetup(postController)
                 .setControllerAdvice(new GlobalExceptionHandler())
+                .addFilters(new ExceptionHandlerFilter(new ObjectMapper()), new AuthFilter(jwtProvider))
                 .build();
     }
 
     @BeforeTransaction
     void singUp() {
         User user = makeUser("test1@gmail.com", "test-test-test-test");
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        jwt = jwtProvider.createJwt(String.valueOf(savedUser.getId()), savedUser.getEmail());
     }
 
     @AfterTransaction
@@ -64,6 +75,7 @@ class PostControllerTest {
         ResultActions result = mockMvc.perform(
                 post("/api/v1/posts")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + jwt)
                         .content(
                                 toJson(
                                         new HashMap<>() {

@@ -34,7 +34,8 @@ public enum ErrorCode {
     NOT_FOUND_USER(30000, "Not found user."),
 
     // 인증 : 40,000
-    UNAUTHORIZED_USER(40000, "Mismatch user password.");
+    UNAUTHORIZED_USER(40000, "Mismatch user password."),
+    INVALID_TOKEN(40001, "Invalid token"),
     ;
     //-----------------------------------------------------------------------------------------------------------
 
