@@ -37,8 +37,8 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
             ErrorResponse errorResponse = new ErrorResponse(ErrorCode.INVALID_TOKEN);
             sendErrorResponse(response, errorResponse, HttpStatus.UNAUTHORIZED);
         } catch (Exception e) {
-            ErrorResponse errorResponse = new ErrorResponse(ErrorCode.INVALID_INPUT_VALUE);
-            sendErrorResponse(response, errorResponse, HttpStatus.BAD_REQUEST);
+            ErrorResponse errorResponse = new ErrorResponse(500, e.getMessage());
+            sendErrorResponse(response, errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
