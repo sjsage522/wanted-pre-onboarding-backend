@@ -1,5 +1,6 @@
 package com.junseok.wantedpreonboardingbackend.module.user.service;
 
+import com.junseok.wantedpreonboardingbackend.global.exception.CustomException;
 import com.junseok.wantedpreonboardingbackend.global.exception.EntityNotFoundException;
 import com.junseok.wantedpreonboardingbackend.global.exception.dto.ErrorCode;
 import com.junseok.wantedpreonboardingbackend.global.util.JwtProvider;
@@ -26,6 +27,9 @@ public class UserService {
                 .password(password)
                 .build();
 
+        if (userRepository.existsByEmail(email)) {
+            throw new CustomException(ErrorCode.ALREADY_EXISTS_USER);
+        }
         final User savedUser = userRepository.save(createUser);
 
         return savedUser.getId();
