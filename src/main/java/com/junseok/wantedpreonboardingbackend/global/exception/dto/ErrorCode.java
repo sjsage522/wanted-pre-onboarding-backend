@@ -24,6 +24,7 @@ public enum ErrorCode {
     NOT_FOUND_POST(30001, "Not found post."),
     ALREADY_EXISTS_USER(30002, "Fail to sign up. Already exists email."),
     DENIED_UPDATE_POST(30003, "Denied update post."),
+    DENIED_DELETE_POST(30003, "Denied delete post."),
 
     // 인증 : 40,000
     UNAUTHORIZED_USER(40000, "Mismatch user password."),

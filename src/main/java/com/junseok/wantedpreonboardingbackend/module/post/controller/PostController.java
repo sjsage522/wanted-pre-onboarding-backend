@@ -83,4 +83,18 @@ public class PostController {
             HttpStatus.OK
         );
     }
+
+    /**
+     * 게시글 삭제
+     */
+    @DeleteMapping("/posts/{postId}")
+    public ResponseEntity<ApiResult<Boolean>> deletePost(@PathVariable Long postId) {
+        Long userId = httpServletUtils.getUserIdFromServletRequest();
+        Boolean isDeleted = postService.deletePost(postId, userId);
+
+        return new ResponseEntity<>(
+            ApiResult.succeed(isDeleted),
+            HttpStatus.OK
+        );
+    }
 }

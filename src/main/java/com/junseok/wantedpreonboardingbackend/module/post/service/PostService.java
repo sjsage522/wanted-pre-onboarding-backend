@@ -62,6 +62,18 @@ public class PostService {
         return Boolean.TRUE;
     }
 
+    @Transactional
+    public Boolean deletePost(Long postId, Long userId) {
+        Post findPost = findPost(postId);
+        if (!findPost.isEnableDelete(userId)) {
+            throw new CustomException(ErrorCode.DENIED_DELETE_POST);
+        }
+
+        postRepository.delete(findPost);
+
+        return Boolean.TRUE;
+    }
+
     private Post findPost(Long postId) {
         return postRepository.findById(postId).orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_POST));
     }

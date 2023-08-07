@@ -213,4 +213,30 @@ class PostControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", is(true)));
     }
+
+    @DisplayName("게시글 삭제 테스트")
+    @Transactional
+    @Test
+    void deletePost() throws Exception {
+        // given
+        int totalSize = 1;
+        long savedId = 1L;
+        for (int i = 0; i < totalSize; i++) {
+            Post post = makePost("title " + i, "content " + i, this.user);
+            Post savedPost = postRepository.save(post);
+            savedId = savedPost.getId();
+        }
+
+        // when
+        ResultActions result = mockMvc.perform(
+                delete("/api/v1/posts/" + savedId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + jwt)
+        );
+
+        // then
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", is(true)));
+    }
 }

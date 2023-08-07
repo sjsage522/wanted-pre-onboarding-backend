@@ -35,6 +35,10 @@ public class Post extends BaseTimeEntity {
         return this.user.getId().equals(userId);
     }
 
+    public boolean isEnableDelete(Long userId) {
+        return this.user.getId().equals(userId);
+    }
+
     public void updatePost(String title, String content) {
         this.title = title;
         this.content = content;
