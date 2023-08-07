@@ -31,6 +31,15 @@ public class Post extends BaseTimeEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
+    public boolean isEnableUpdate(Long userId) {
+        return this.user.getId().equals(userId);
+    }
+
+    public void updatePost(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
+
     @Builder
     private Post(Long id, String title, String content, User user) {
         this.id = id;

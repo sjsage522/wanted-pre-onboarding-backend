@@ -1,5 +1,7 @@
 package com.junseok.wantedpreonboardingbackend.global.filter;
 
+import com.junseok.wantedpreonboardingbackend.global.exception.AuthenticationException;
+import com.junseok.wantedpreonboardingbackend.global.exception.dto.ErrorCode;
 import com.junseok.wantedpreonboardingbackend.global.util.JwtProvider;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,7 +22,8 @@ public class AuthFilter extends OncePerRequestFilter {
     private final JwtProvider jwtProvider;
 
     private static final List<Pattern> EXCLUDE_URL = List.of(
-            Pattern.compile("^/api/v1/users*")
+            Pattern.compile("^/api/v1/users"),
+            Pattern.compile("^/api/v1/users/[\\S]+")
     );
 
     @Override
@@ -32,6 +35,9 @@ public class AuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         final String authorization = request.getHeader("Authorization");
+        if (authorization == null) {
+            throw new AuthenticationException(ErrorCode.UNAUTHORIZED);
+        }
         final String jwt = authorization.split("Bearer")[1];
 
         final Map<String, Object> map = jwtProvider.parseJwt(jwt);

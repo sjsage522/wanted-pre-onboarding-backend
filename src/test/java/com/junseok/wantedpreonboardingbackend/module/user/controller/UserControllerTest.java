@@ -157,7 +157,7 @@ class UserControllerTest {
 
         // then
         result.andDo(print())
-                .andExpect(status().isCreated());
+                .andExpect(status().isOk());
     }
 
     @DisplayName("사용자 로그인 실패 테스트 - 이메일에 @ 누락")

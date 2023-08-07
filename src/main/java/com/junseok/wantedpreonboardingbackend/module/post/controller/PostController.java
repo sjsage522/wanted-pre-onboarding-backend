@@ -5,6 +5,7 @@ import com.junseok.wantedpreonboardingbackend.global.dto.PageResponseDto;
 import com.junseok.wantedpreonboardingbackend.global.util.HttpServletUtils;
 import com.junseok.wantedpreonboardingbackend.module.post.dto.PostCreateDto;
 import com.junseok.wantedpreonboardingbackend.module.post.dto.PostResponseDto;
+import com.junseok.wantedpreonboardingbackend.module.post.dto.PostUpdateDto;
 import com.junseok.wantedpreonboardingbackend.module.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 
@@ -50,7 +51,7 @@ public class PostController {
 
         return new ResponseEntity<>(
             ApiResult.succeed(postResponseDtos),
-            HttpStatus.ACCEPTED
+            HttpStatus.OK
         );
     }
 
@@ -63,7 +64,23 @@ public class PostController {
 
         return new ResponseEntity<>(
             ApiResult.succeed(postResponseDto),
-            HttpStatus.ACCEPTED
+            HttpStatus.OK
+        );
+    }
+
+    /**
+     * 게시글 수정
+     */
+    @PatchMapping("/posts/{postId}")
+    public ResponseEntity<ApiResult<Boolean>> updatePost(
+            @PathVariable Long postId,
+            @RequestBody PostUpdateDto postUpdateDto) {
+        Long userId = httpServletUtils.getUserIdFromServletRequest();
+        Boolean isUpdated = postService.updatePost(postUpdateDto.getTitle(), postUpdateDto.getContent(), postId, userId);
+
+        return new ResponseEntity<>(
+            ApiResult.succeed(isUpdated),
+            HttpStatus.OK
         );
     }
 }

@@ -9,11 +9,10 @@ import com.junseok.wantedpreonboardingbackend.module.post.dao.PostRepository;
 import com.junseok.wantedpreonboardingbackend.module.post.domain.Post;
 import com.junseok.wantedpreonboardingbackend.module.user.dao.UserRepository;
 import com.junseok.wantedpreonboardingbackend.module.user.domain.User;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.Ordered;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.transaction.AfterTransaction;
 import org.springframework.test.context.transaction.BeforeTransaction;
@@ -26,12 +25,12 @@ import java.util.HashMap;
 
 import static com.junseok.wantedpreonboardingbackend.TestUtils.*;
 import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("게시글 컨트롤러 테스트")
 @SpringBootTest
 class PostControllerTest {
@@ -125,7 +124,7 @@ class PostControllerTest {
 
         // then
         result.andDo(print())
-                .andExpect(status().isAccepted())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.count", is(10)))
                 .andExpect(jsonPath("$.data.page", is(page)))
                 .andExpect(jsonPath("$.data.size", is(10)))
@@ -152,7 +151,7 @@ class PostControllerTest {
 
         // then
         result.andDo(print())
-                .andExpect(status().isAccepted())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.title", is("title 0")))
                 .andExpect(jsonPath("$.data.content", is("content 0")))
                 .andExpect(jsonPath("$.data.post_id", is(1)));
@@ -176,5 +175,42 @@ class PostControllerTest {
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.error.code", is(30001)))
                 .andExpect(jsonPath("$.error.message", is("Not found post.")));
+    }
+
+    @Order(Ordered.LOWEST_PRECEDENCE)
+    @DisplayName("게시글 수정 테스트")
+    @Transactional
+    @Test
+    void updatePost() throws Exception {
+        // given
+        int totalSize = 1;
+        long savedId = 1L;
+        for (int i = 0; i < totalSize; i++) {
+            Post post = makePost("title " + i, "content " + i, this.user);
+            Post savedPost = postRepository.save(post);
+            savedId = savedPost.getId();
+        }
+
+        // when
+        ResultActions result = mockMvc.perform(
+                patch("/api/v1/posts/" + savedId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + jwt)
+                        .content(
+                                toJson(
+                                        new HashMap<>() {
+                                            {
+                                                put("title", "title update");
+                                                put("content", "content update");
+                                            }
+                                        }
+                                )
+                        )
+        );
+
+        // then
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", is(true)));
     }
 }

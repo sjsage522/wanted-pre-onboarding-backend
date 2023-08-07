@@ -2,6 +2,7 @@ package com.junseok.wantedpreonboardingbackend.global.exception.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.junseok.wantedpreonboardingbackend.global.dto.ApiResult;
+import com.junseok.wantedpreonboardingbackend.global.exception.AuthenticationException;
 import com.junseok.wantedpreonboardingbackend.global.exception.dto.ErrorCode;
 import com.junseok.wantedpreonboardingbackend.global.exception.dto.ErrorResponse;
 import io.jsonwebtoken.JwtException;
@@ -35,6 +36,9 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (JwtException e) {
             ErrorResponse errorResponse = new ErrorResponse(ErrorCode.INVALID_TOKEN);
+            sendErrorResponse(response, errorResponse, HttpStatus.UNAUTHORIZED);
+        } catch (AuthenticationException e) {
+            ErrorResponse errorResponse = new ErrorResponse(ErrorCode.UNAUTHORIZED);
             sendErrorResponse(response, errorResponse, HttpStatus.UNAUTHORIZED);
         } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(500, e.getMessage());

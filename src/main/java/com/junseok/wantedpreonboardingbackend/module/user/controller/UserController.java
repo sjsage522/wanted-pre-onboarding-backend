@@ -42,7 +42,7 @@ public class UserController {
 
         return new ResponseEntity<>(
             ApiResult.succeed(userTokenResponseDto),
-            HttpStatus.CREATED
+            HttpStatus.OK
         );
     }
  }

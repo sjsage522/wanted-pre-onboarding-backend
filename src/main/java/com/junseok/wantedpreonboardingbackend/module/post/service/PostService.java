@@ -1,6 +1,7 @@
 package com.junseok.wantedpreonboardingbackend.module.post.service;
 
 import com.junseok.wantedpreonboardingbackend.global.dto.PageResponseDto;
+import com.junseok.wantedpreonboardingbackend.global.exception.CustomException;
 import com.junseok.wantedpreonboardingbackend.global.exception.EntityNotFoundException;
 import com.junseok.wantedpreonboardingbackend.global.exception.dto.ErrorCode;
 import com.junseok.wantedpreonboardingbackend.module.post.dao.PostRepository;
@@ -44,8 +45,24 @@ public class PostService {
     }
 
     public PostResponseDto getPost(Long postId) {
-        Post findPost = postRepository.findById(postId).orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_POST));
+        Post findPost = findPost(postId);
 
         return new PostResponseDto(findPost);
+    }
+
+    @Transactional
+    public Boolean updatePost(String title, String content, Long postId, Long userId) {
+        Post findPost = findPost(postId);
+        if (!findPost.isEnableUpdate(userId)) {
+            throw new CustomException(ErrorCode.DENIED_UPDATE_POST);
+        }
+
+        findPost.updatePost(title, content);
+
+        return Boolean.TRUE;
+    }
+
+    private Post findPost(Long postId) {
+        return postRepository.findById(postId).orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_POST));
     }
 }
