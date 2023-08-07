@@ -103,7 +103,7 @@ class PostControllerTest {
                 .andExpect(status().isCreated());
     }
 
-    @DisplayName("게시글 조회 테스트")
+    @DisplayName("게시글 조회 테스트 - 리스트 조회")
     @Transactional
     @Test
     void getPosts() throws Exception {
@@ -130,5 +130,51 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.data.page", is(page)))
                 .andExpect(jsonPath("$.data.size", is(10)))
                 .andExpect(jsonPath("$.data.total", is(totalSize)));
+    }
+
+    @DisplayName("게시글 조회 테스트 - 단건 조회")
+    @Transactional
+    @Test
+    void getPost() throws Exception {
+        // given
+        int totalSize = 1;
+        for (int i = 0; i < totalSize; i++) {
+            Post post = makePost("title " + i, "content " + i, this.user);
+            postRepository.save(post);
+        }
+
+        // when
+        ResultActions result = mockMvc.perform(
+                get("/api/v1/posts/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + jwt)
+        );
+
+        // then
+        result.andDo(print())
+                .andExpect(status().isAccepted())
+                .andExpect(jsonPath("$.data.title", is("title 0")))
+                .andExpect(jsonPath("$.data.content", is("content 0")))
+                .andExpect(jsonPath("$.data.post_id", is(1)));
+    }
+
+    @DisplayName("게시글 조회 실패 테스트 - 단건 조회(게시글이 존재하지 않음)")
+    @Transactional
+    @Test
+    void getPostFail1() throws Exception {
+        // given
+
+        // when
+        ResultActions result = mockMvc.perform(
+                get("/api/v1/posts/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + jwt)
+        );
+
+        // then
+        result.andDo(print())
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.error.code", is(30001)))
+                .andExpect(jsonPath("$.error.message", is("Not found post.")));
     }
 }
