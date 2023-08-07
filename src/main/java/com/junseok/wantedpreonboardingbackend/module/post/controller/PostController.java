@@ -52,5 +52,18 @@ public class PostController {
             ApiResult.succeed(postResponseDtos),
             HttpStatus.ACCEPTED
         );
-    }   
+    }
+
+    /**
+     * 게시글 단건 조회
+     */
+    @GetMapping("/posts/{postId}")
+    public ResponseEntity<ApiResult<PostResponseDto>> getPost(@PathVariable Long postId) {
+        PostResponseDto postResponseDto = postService.getPost(postId);
+
+        return new ResponseEntity<>(
+            ApiResult.succeed(postResponseDto),
+            HttpStatus.ACCEPTED
+        );
+    }
 }

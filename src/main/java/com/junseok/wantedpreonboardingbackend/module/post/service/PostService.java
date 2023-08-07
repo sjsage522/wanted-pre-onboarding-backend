@@ -42,4 +42,10 @@ public class PostService {
 
         return new PageResponseDto<>(posts);
     }
+
+    public PostResponseDto getPost(Long postId) {
+        Post findPost = postRepository.findById(postId).orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_POST));
+
+        return new PostResponseDto(findPost);
+    }
 }
