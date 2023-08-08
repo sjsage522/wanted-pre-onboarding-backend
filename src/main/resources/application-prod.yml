@@ -2,4 +2,4 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
-      ddl-auto: none # TEST
+      ddl-auto: validate # TEST

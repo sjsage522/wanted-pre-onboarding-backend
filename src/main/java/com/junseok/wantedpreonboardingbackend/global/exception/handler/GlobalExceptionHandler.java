@@ -11,6 +11,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import static com.junseok.wantedpreonboardingbackend.global.dto.ApiResult.failed;
 
@@ -37,6 +38,15 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResult<ErrorResponse>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         String message = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
+        ErrorResponse errorResponse = getErrorResponseByMessage(message);
+
+        return new ResponseEntity<>(failed(errorResponse), HttpStatus.BAD_REQUEST);
+    }
+
+    // TypeMismatchException
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ApiResult<ErrorResponse>> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
+        String message = e.getMessage();
         ErrorResponse errorResponse = getErrorResponseByMessage(message);
 
         return new ResponseEntity<>(failed(errorResponse), HttpStatus.BAD_REQUEST);
