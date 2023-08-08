@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.Locale;
 
 import static com.junseok.wantedpreonboardingbackend.TestUtils.*;
 import static org.hamcrest.Matchers.is;
@@ -137,14 +138,16 @@ class PostControllerTest {
     void getPost() throws Exception {
         // given
         int totalSize = 1;
+        long savedId = 1L;
         for (int i = 0; i < totalSize; i++) {
             Post post = makePost("title " + i, "content " + i, this.user);
-            postRepository.save(post);
+            Post savedPost = postRepository.save(post);
+            savedId = savedPost.getId();
         }
 
         // when
         ResultActions result = mockMvc.perform(
-                get("/api/v1/posts/1")
+                get("/api/v1/posts/" + savedId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
         );
@@ -154,7 +157,7 @@ class PostControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.title", is("title 0")))
                 .andExpect(jsonPath("$.data.content", is("content 0")))
-                .andExpect(jsonPath("$.data.post_id", is(1)));
+                .andExpect(jsonPath("$.data.post_id", is(savedId), Long.class));
     }
 
     @DisplayName("게시글 조회 실패 테스트 - 단건 조회(게시글이 존재하지 않음)")
@@ -177,7 +180,6 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.error.message", is("Not found post.")));
     }
 
-    @Order(Ordered.LOWEST_PRECEDENCE)
     @DisplayName("게시글 수정 테스트")
     @Transactional
     @Test
@@ -214,6 +216,46 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.data", is(true)));
     }
 
+    @DisplayName("게시글 수정 실패 테스트 - 다른 사람의 게시글")
+    @Transactional
+    @Test
+    void updatePostFail1() throws Exception {
+        // given
+        int totalSize = 1;
+        long savedId = 1L;
+        for (int i = 0; i < totalSize; i++) {
+            Post post = makePost("title " + i, "content " + i, this.user);
+            Post savedPost = postRepository.save(post);
+            savedId = savedPost.getId();
+        }
+        User user = makeUser("test2@gmail.com", "test-test-test-test");
+        User savedUser = userRepository.save(user);
+        String token = jwtProvider.createJwt(String.valueOf(savedUser.getId()), savedUser.getEmail());
+
+        // when
+        ResultActions result = mockMvc.perform(
+                patch("/api/v1/posts/" + savedId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + token)
+                        .content(
+                                toJson(
+                                        new HashMap<>() {
+                                            {
+                                                put("title", "title update");
+                                                put("content", "content update");
+                                            }
+                                        }
+                                )
+                        )
+        );
+
+        // then
+        result.andDo(print())
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.error.code", is(30003)))
+                .andExpect(jsonPath("$.error.message", is("Denied update post.")));
+    }
+
     @DisplayName("게시글 삭제 테스트")
     @Transactional
     @Test
@@ -238,5 +280,35 @@ class PostControllerTest {
         result.andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", is(true)));
+    }
+
+    @DisplayName("게시글 삭제 실패 테스트 - 다른 사람의 게시글")
+    @Transactional
+    @Test
+    void deletePostFail1() throws Exception {
+        // given
+        int totalSize = 1;
+        long savedId = 1L;
+        for (int i = 0; i < totalSize; i++) {
+            Post post = makePost("title " + i, "content " + i, this.user);
+            Post savedPost = postRepository.save(post);
+            savedId = savedPost.getId();
+        }
+        User user = makeUser("test2@gmail.com", "test-test-test-test");
+        User savedUser = userRepository.save(user);
+        String token = jwtProvider.createJwt(String.valueOf(savedUser.getId()), savedUser.getEmail());
+
+        // when
+        ResultActions result = mockMvc.perform(
+                delete("/api/v1/posts/" + savedId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + token)
+        );
+
+        // then
+        result.andDo(print())
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.error.code", is(30003)))
+                .andExpect(jsonPath("$.error.message", is("Denied delete post.")));
     }
 }
