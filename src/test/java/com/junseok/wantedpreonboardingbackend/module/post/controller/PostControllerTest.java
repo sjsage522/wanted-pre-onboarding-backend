@@ -12,7 +12,6 @@ import com.junseok.wantedpreonboardingbackend.module.user.domain.User;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.Ordered;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.transaction.AfterTransaction;
 import org.springframework.test.context.transaction.BeforeTransaction;
@@ -22,7 +21,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
-import java.util.Locale;
 
 import static com.junseok.wantedpreonboardingbackend.TestUtils.*;
 import static org.hamcrest.Matchers.is;

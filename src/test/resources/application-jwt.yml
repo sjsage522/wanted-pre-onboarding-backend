@@ -1,0 +1,3 @@
+jwt:
+  config:
+    expired-time: 1800000 # 30 min

@@ -1,0 +1,7 @@
+spring:
+  profiles:
+    default: test
+
+  config:
+    import:
+      - classpath:application-jwt.yml
