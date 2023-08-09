@@ -251,7 +251,7 @@ class PostControllerTest {
         result.andDo(print())
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.error.code", is(30003)))
-                .andExpect(jsonPath("$.error.message", is("Denied update post.")));
+                .andExpect(jsonPath("$.error.message", is("Denied access this post. You do not have permission.")));
     }
 
     @DisplayName("게시글 삭제 테스트")
@@ -307,6 +307,6 @@ class PostControllerTest {
         result.andDo(print())
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.error.code", is(30003)))
-                .andExpect(jsonPath("$.error.message", is("Denied delete post.")));
+                .andExpect(jsonPath("$.error.message", is("Denied access this post. You do not have permission.")));
     }
 }
