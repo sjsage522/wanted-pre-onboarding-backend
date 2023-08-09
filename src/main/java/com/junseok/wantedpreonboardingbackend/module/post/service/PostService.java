@@ -1,7 +1,7 @@
 package com.junseok.wantedpreonboardingbackend.module.post.service;
 
+import com.junseok.wantedpreonboardingbackend.global.aop.annotation.PostAuthCheck;
 import com.junseok.wantedpreonboardingbackend.global.dto.PageResponseDto;
-import com.junseok.wantedpreonboardingbackend.global.exception.CustomException;
 import com.junseok.wantedpreonboardingbackend.global.exception.EntityNotFoundException;
 import com.junseok.wantedpreonboardingbackend.global.exception.dto.ErrorCode;
 import com.junseok.wantedpreonboardingbackend.module.post.dao.PostRepository;
@@ -50,25 +50,19 @@ public class PostService {
         return new PostResponseDto(findPost);
     }
 
+    @PostAuthCheck
     @Transactional
-    public Boolean updatePost(String title, String content, Long postId, Long userId) {
+    public Boolean updatePost(String title, String content, Long postId) {
         Post findPost = findPost(postId);
-        if (!findPost.isEnableUpdate(userId)) {
-            throw new CustomException(ErrorCode.DENIED_UPDATE_POST);
-        }
-
         findPost.updatePost(title, content);
 
         return Boolean.TRUE;
     }
 
+    @PostAuthCheck
     @Transactional
-    public Boolean deletePost(Long postId, Long userId) {
+    public Boolean deletePost(Long postId) {
         Post findPost = findPost(postId);
-        if (!findPost.isEnableDelete(userId)) {
-            throw new CustomException(ErrorCode.DENIED_DELETE_POST);
-        }
-
         postRepository.delete(findPost);
 
         return Boolean.TRUE;

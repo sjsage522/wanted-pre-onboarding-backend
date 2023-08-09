@@ -75,8 +75,7 @@ public class PostController {
     public ResponseEntity<ApiResult<Boolean>> updatePost(
             @PathVariable Long postId,
             @RequestBody PostUpdateDto postUpdateDto) {
-        Long userId = httpServletUtils.getUserIdFromServletRequest();
-        Boolean isUpdated = postService.updatePost(postUpdateDto.getTitle(), postUpdateDto.getContent(), postId, userId);
+        Boolean isUpdated = postService.updatePost(postUpdateDto.getTitle(), postUpdateDto.getContent(), postId);
 
         return new ResponseEntity<>(
             ApiResult.succeed(isUpdated),
@@ -89,8 +88,7 @@ public class PostController {
      */
     @DeleteMapping("/posts/{postId}")
     public ResponseEntity<ApiResult<Boolean>> deletePost(@PathVariable Long postId) {
-        Long userId = httpServletUtils.getUserIdFromServletRequest();
-        Boolean isDeleted = postService.deletePost(postId, userId);
+        Boolean isDeleted = postService.deletePost(postId);
 
         return new ResponseEntity<>(
             ApiResult.succeed(isDeleted),
