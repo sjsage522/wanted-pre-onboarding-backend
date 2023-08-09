@@ -26,6 +26,10 @@ public class AuthFilter extends OncePerRequestFilter {
             Pattern.compile("^/api/v1/users/[\\S]+")
     );
 
+    private static final String KEY = "Authorization";
+
+    private static final String TYPE = "Bearer";
+
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         return EXCLUDE_URL.stream()
@@ -34,11 +38,12 @@ public class AuthFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        final String authorization = request.getHeader("Authorization");
-        if (authorization == null) {
+        final String authorization = request.getHeader(KEY);
+        if (authorization == null || !authorization.contains(TYPE)
+                || authorization.length() < 8) { // [Bearer e] => min 8 bytes
             throw new AuthenticationException(ErrorCode.UNAUTHORIZED);
         }
-        final String jwt = authorization.split("Bearer")[1];
+        final String jwt = authorization.split(TYPE)[1];
 
         final Map<String, Object> map = jwtProvider.parseJwt(jwt);
         request.setAttribute("userId", map.get("sub"));
