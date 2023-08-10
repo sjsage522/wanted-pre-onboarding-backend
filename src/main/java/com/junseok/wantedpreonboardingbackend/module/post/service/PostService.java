@@ -37,13 +37,15 @@ public class PostService {
 
         return savedPost.getId();
     }
-    
+
+    @Transactional(readOnly = true)
     public PageResponseDto<PostResponseDto> getPosts(Pageable pageable) {
         final Page<PostResponseDto> posts = postRepository.findAll(pageable).map(PostResponseDto::new);
 
         return new PageResponseDto<>(posts);
     }
 
+    @Transactional(readOnly = true)
     public PostResponseDto getPost(Long postId) {
         Post findPost = findPost(postId);
 
