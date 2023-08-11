@@ -5,9 +5,9 @@ import com.junseok.wantedpreonboardingbackend.global.exception.handler.Exception
 import com.junseok.wantedpreonboardingbackend.global.exception.handler.GlobalExceptionHandler;
 import com.junseok.wantedpreonboardingbackend.global.filter.AuthFilter;
 import com.junseok.wantedpreonboardingbackend.global.util.JwtProvider;
-import com.junseok.wantedpreonboardingbackend.module.post.dao.PostRepository;
+import com.junseok.wantedpreonboardingbackend.module.post.domain.PostRepository;
 import com.junseok.wantedpreonboardingbackend.module.post.domain.Post;
-import com.junseok.wantedpreonboardingbackend.module.user.dao.UserRepository;
+import com.junseok.wantedpreonboardingbackend.module.user.domain.UserRepository;
 import com.junseok.wantedpreonboardingbackend.module.user.domain.User;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;

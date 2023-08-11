@@ -4,7 +4,7 @@ import com.junseok.wantedpreonboardingbackend.global.exception.CustomException;
 import com.junseok.wantedpreonboardingbackend.global.exception.EntityNotFoundException;
 import com.junseok.wantedpreonboardingbackend.global.exception.dto.ErrorCode;
 import com.junseok.wantedpreonboardingbackend.global.util.JwtProvider;
-import com.junseok.wantedpreonboardingbackend.module.user.dao.UserRepository;
+import com.junseok.wantedpreonboardingbackend.module.user.domain.UserRepository;
 import com.junseok.wantedpreonboardingbackend.module.user.domain.User;
 import com.junseok.wantedpreonboardingbackend.module.user.dto.UserTokenResponseDto;
 import lombok.RequiredArgsConstructor;

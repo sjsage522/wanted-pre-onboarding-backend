@@ -1,6 +1,5 @@
-package com.junseok.wantedpreonboardingbackend.module.post.dao;
+package com.junseok.wantedpreonboardingbackend.module.post.domain;
 
-import com.junseok.wantedpreonboardingbackend.module.post.domain.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;

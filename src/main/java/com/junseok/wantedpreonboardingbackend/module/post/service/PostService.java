@@ -4,10 +4,10 @@ import com.junseok.wantedpreonboardingbackend.global.aop.annotation.PostAuthChec
 import com.junseok.wantedpreonboardingbackend.global.dto.PageResponseDto;
 import com.junseok.wantedpreonboardingbackend.global.exception.EntityNotFoundException;
 import com.junseok.wantedpreonboardingbackend.global.exception.dto.ErrorCode;
-import com.junseok.wantedpreonboardingbackend.module.post.dao.PostRepository;
+import com.junseok.wantedpreonboardingbackend.module.post.domain.PostRepository;
 import com.junseok.wantedpreonboardingbackend.module.post.domain.Post;
 import com.junseok.wantedpreonboardingbackend.module.post.dto.PostResponseDto;
-import com.junseok.wantedpreonboardingbackend.module.user.dao.UserRepository;
+import com.junseok.wantedpreonboardingbackend.module.user.domain.UserRepository;
 import com.junseok.wantedpreonboardingbackend.module.user.domain.User;
 import lombok.RequiredArgsConstructor;
 

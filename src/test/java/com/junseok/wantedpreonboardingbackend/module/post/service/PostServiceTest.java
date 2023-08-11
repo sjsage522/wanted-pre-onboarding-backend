@@ -1,8 +1,8 @@
 package com.junseok.wantedpreonboardingbackend.module.post.service;
 
-import com.junseok.wantedpreonboardingbackend.module.post.dao.PostRepository;
+import com.junseok.wantedpreonboardingbackend.module.post.domain.PostRepository;
 import com.junseok.wantedpreonboardingbackend.module.post.domain.Post;
-import com.junseok.wantedpreonboardingbackend.module.user.dao.UserRepository;
+import com.junseok.wantedpreonboardingbackend.module.user.domain.UserRepository;
 import com.junseok.wantedpreonboardingbackend.module.user.domain.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

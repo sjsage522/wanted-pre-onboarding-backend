@@ -1,7 +1,7 @@
 package com.junseok.wantedpreonboardingbackend.module.user.controller;
 
 import com.junseok.wantedpreonboardingbackend.global.exception.handler.GlobalExceptionHandler;
-import com.junseok.wantedpreonboardingbackend.module.user.dao.UserRepository;
+import com.junseok.wantedpreonboardingbackend.module.user.domain.UserRepository;
 import com.junseok.wantedpreonboardingbackend.module.user.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,7 +19,6 @@ import java.util.HashMap;
 import static com.junseok.wantedpreonboardingbackend.TestUtils.makeUser;
 import static com.junseok.wantedpreonboardingbackend.TestUtils.toJson;
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;

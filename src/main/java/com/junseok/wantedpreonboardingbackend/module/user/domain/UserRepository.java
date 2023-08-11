@@ -1,6 +1,5 @@
-package com.junseok.wantedpreonboardingbackend.module.user.dao;
+package com.junseok.wantedpreonboardingbackend.module.user.domain;
 
-import com.junseok.wantedpreonboardingbackend.module.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

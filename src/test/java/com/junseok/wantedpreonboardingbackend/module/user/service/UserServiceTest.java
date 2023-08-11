@@ -2,7 +2,7 @@ package com.junseok.wantedpreonboardingbackend.module.user.service;
 
 import com.junseok.wantedpreonboardingbackend.global.exception.CustomException;
 import com.junseok.wantedpreonboardingbackend.global.util.JwtProvider;
-import com.junseok.wantedpreonboardingbackend.module.user.dao.UserRepository;
+import com.junseok.wantedpreonboardingbackend.module.user.domain.UserRepository;
 import com.junseok.wantedpreonboardingbackend.module.user.domain.User;
 import com.junseok.wantedpreonboardingbackend.module.user.dto.UserTokenResponseDto;
 import org.junit.jupiter.api.Assertions;

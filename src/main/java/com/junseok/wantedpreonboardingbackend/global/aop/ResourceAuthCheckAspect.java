@@ -4,7 +4,7 @@ import com.junseok.wantedpreonboardingbackend.global.exception.CustomException;
 import com.junseok.wantedpreonboardingbackend.global.exception.EntityNotFoundException;
 import com.junseok.wantedpreonboardingbackend.global.exception.dto.ErrorCode;
 import com.junseok.wantedpreonboardingbackend.global.util.HttpServletUtils;
-import com.junseok.wantedpreonboardingbackend.module.post.dao.PostRepository;
+import com.junseok.wantedpreonboardingbackend.module.post.domain.PostRepository;
 import com.junseok.wantedpreonboardingbackend.module.post.domain.Post;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.JoinPoint;
